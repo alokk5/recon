@@ -9,7 +9,26 @@ from flask_login import UserMixin
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+'''
+CREATE TABLE user (
+     id INTEGER NOT NULL AUTO_INCREMENT,
+	username VARCHAR(20) not null unique,
+	password VARCHAR(60) not null unique,
+	email VARCHAR(120) not null unique,
+	image_file VARCHAR(20) not null default 'default.jpg',
+     PRIMARY KEY (id)
+ );
+ 
+ create table post
+(
+	id INTEGER not null primary key,
+	title VARCHAR(100) not null,
+	date_posted DATETIME not null,
+	content TEXT not null,
+	user_id INTEGER not null references user
+);
 
+'''
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
