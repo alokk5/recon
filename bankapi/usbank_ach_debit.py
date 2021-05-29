@@ -5,6 +5,7 @@ import uuid
 import json
 import time
 import base64
+import logging
 
 CLIENT_ID = 'wBQoKHD2AMSB1hGa8LOrmWHzYTWeV2lp'      #NEVER SHARE it with anyone
 SECRET = 'slG10Hf5wyokTVEo'                         #NEVER SHARE IT with ANYONE
@@ -42,7 +43,6 @@ company_descriptive_date = 'Jan 13'
 discretionary_data = 'Some data'
 
 #payload = "{ \r\n    \"transaction\": {\r\n    \"clientDetails\": {\r\n      \"clientID\": \"TXM47nzQvKX2CYNVmAFTRkxQbgazTw1P\",\r\n      \"clientRequestID\": \"TRX-000000500\"\r\n    },\r\n    \"requestorDetails\": {\r\n      \"companyName\": \"Tesla, In\",\r\n      \"companyID\": \"1123456789\",\r\n      \"companyNotes\": \"Company Notes\",\r\n      \"companyDescriptiveDate\" : \"Jan 13\",\r\n      \"discretionaryData\": \"DK\"\r\n    },\r\n    \"recipientDetails\": {\r\n      \"recipientType\": \"Individual\",\r\n      \"recipientName\": \"John Snow\",\r\n      \"recipientAccountType\": \"Savings\",\r\n      \"recipientAccountNumber\": \"77777777777777781\",\r\n      \"recipientRoutingNumber\": \"061000104\",\r\n      \"recipientIdentificationNumber\": \"1234\"\r\n    },\r\n    \"transactionDetails\": {\r\n      \"transactionType\": \"Payment\",\r\n      \"standardEntryClassCode\": \"CTX\",\r\n      \"isWebAuthorized\": false,\r\n      \"isPhoneAuthorized\": false,\r\n      \"effectiveDate\": \"2020-04-19 11:59:45Z\",\r\n      \"amount\": \"24000.0\",\r\n      \"isTestTransaction\" : false\r\n      \r\n     \r\n    },\r\n   \r\n\t\"communications\": {\r\n      \"commentsForRecipients\": \"PAYROLL AX\",\r\n      \"remittanceRecords\": [\"ISA*00*0000000000*00*0000000000*ZZ*11111111TRS *ZZ*US TREASURY 980312*002786659\",\"ISA*00*0000000000*00*0000000000*ZZ*11111111TRS *ZZ*US TREASURY 980312*002786659\"\r\n        \r\n      ]\r\n    }\r\n  }\r\n}"
-print(payload)
 payload = f"""{{
   "transaction": {{
     "clientDetails": {{
@@ -82,6 +82,40 @@ payload = f"""{{
     }}
   }}
 }}"""
+
+"""
+ISA Segment: Interchange Control Header
+Purpose:  To start and identify an interchange of one or more functional groups and 				
+          interchange-related control segments.
+
+General	Information:  This segment is mandatory. It contains the value of the data element separators,		
+                      data segment terminators, the identify of the sender and receiver and the required 			
+                      authorization and security information.
+
+Example:
+	ISA*00*      00*       ZZ*YOURID*ZZ*BGETESTWEH*950331*0915*U*003040*0001*0*T*
+    1   2        3         4  5      7  8          9      10   1 2      3    4 5
+Segment Ref
+ID	    No. Segment Name	            Req. / Opt.	    Contents
+------- --- --------------------------- ------------    ------------------------------------------
+ISA01	I01	Auth. Information Qual	    Req.	        “00”
+ISA02	I02	Auth. Information	        Req.	        All Spaces
+ISA03	I03	Security Info. Qual.	    Req.	        “00”
+ISA04	I04	Security Information	    Req.	        All Spaces
+ISA05	105	Interchange ID Qual.	    Req.	        Trading Partner Defined
+ISA06	I06	Interchange Sender ID	    Req.	        Your Interchange ID
+ISA07	I05	Interchange ID Qual.	    Req.	        Test - “ZZ”  Prod - “01”
+ISA08	I07	Interchange Receiver ID	    Req.	        Test - BGETEST___(3 initials)
+                                                        Prod - “156171464” (BGE DUNS)
+ISA09	I08	Date	                    Req.	        Creation Date (YYMMDD)
+ISA10	I09	Time	                    Req.	        Creation Time. Time in 24-hour as follows: HHMM, or HHMMSS, etc
+ISA11	I10	Interchange Cntrl. Stnds. Code	Req.	    “U”
+ISA12	I11	Interchange Version ID	    Req.	        “00304”
+ISA13	I12	Interchange Control No.	    Req.	        Sequential Number
+ISA14	I13	Acknowledgment Requested	Req.	        “0”  (No) “1” (Yes)
+ISA15	I14	Test Indicator	            Req.	        “T”  (Test) “P” (Production)
+ISA16	I15	Sub Element Separator	    Req.	        Hex “3A”
+"""
 
 print(payload)
 idempotency_key = uuid.uuid4()
